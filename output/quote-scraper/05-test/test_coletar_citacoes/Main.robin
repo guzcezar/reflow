@@ -1,0 +1,69 @@
+# Teste do flow coletar_citacoes: confere o quotes.csv gerado e grava PASS/FAIL por cenário no log de teste.
+# Rodar DEPOIS do flow coletar_citacoes. Não chama o flow convertido.
+# Legado: input/quote-scraper/main.py
+
+SET cfg_caminho_csv TO $'''C:\\Users\\Public\\Documents\\quotes.csv'''
+SET cfg_caminho_log TO $'''C:\\Users\\Public\\Documents\\test_coletar_citacoes.log'''
+SET cfg_cabecalho_esperado TO $'''text,author,tags,author_url'''
+SET cfg_prefixo_url_autor TO $'''https://quotes.toscrape.com/author/'''
+SET total_pass TO 0
+SET total_fail TO 0
+DateTime.GetCurrentDateTime.Local DateTimeFormat: DateTime.DateTimeFormat.DateAndTime CurrentDateTime=> agora
+File.WriteText File: cfg_caminho_log TextToWrite: $'''%agora% | Início do teste de coletar_citacoes (%cfg_caminho_csv%)''' AppendNewLine: True IfFileExists: File.IfFileExists.Overwrite Encoding: File.FileEncoding.UTF8
+
+
+# CT-01: quotes.csv existe e não está vazio (RN-11, main.py:12, main.py:45)
+# TODO reflow: ação não mapeada — verificar se o arquivo existe antes de ler (sem ela, se o quotes.csv não existir, a leitura abaixo para o teste com o erro do PAD)
+File.ReadTextFromFile.ReadText File: cfg_caminho_csv Encoding: File.TextFileEncoding.UTF8 Content=> conteudo_csv
+IF IsEmpty(conteudo_csv) THEN
+    SET total_fail TO total_fail + 1
+    File.WriteText File: cfg_caminho_log TextToWrite: $'''CT-01 FAIL quotes.csv está vazio''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.UTF8
+ELSE
+    SET total_pass TO total_pass + 1
+    File.WriteText File: cfg_caminho_log TextToWrite: $'''CT-01 PASS quotes.csv existe e tem conteúdo''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.UTF8
+END
+
+
+# CT-02: cabeçalho na ordem text,author,tags,author_url (RN-12, main.py:46)
+IF StartsWith(conteudo_csv, cfg_cabecalho_esperado, False) THEN
+    SET total_pass TO total_pass + 1
+    File.WriteText File: cfg_caminho_log TextToWrite: $'''CT-02 PASS cabeçalho %cfg_cabecalho_esperado%''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.UTF8
+ELSE
+    SET total_fail TO total_fail + 1
+    File.WriteText File: cfg_caminho_log TextToWrite: $'''CT-02 FAIL o arquivo não começa com %cfg_cabecalho_esperado%''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.UTF8
+END
+
+
+# CT-03: texto das citações sem as aspas tipográficas “ ” (RN-07, main.py:29)
+IF Contains(conteudo_csv, $'''“''', False) THEN
+    SET total_fail TO total_fail + 1
+    File.WriteText File: cfg_caminho_log TextToWrite: $'''CT-03 FAIL o arquivo tem a aspa tipográfica “''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.UTF8
+ELSE
+    IF Contains(conteudo_csv, $'''”''', False) THEN
+        SET total_fail TO total_fail + 1
+        File.WriteText File: cfg_caminho_log TextToWrite: $'''CT-03 FAIL o arquivo tem a aspa tipográfica ”''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.UTF8
+    ELSE
+        SET total_pass TO total_pass + 1
+        File.WriteText File: cfg_caminho_log TextToWrite: $'''CT-03 PASS nenhuma aspa tipográfica no arquivo''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.UTF8
+    END
+END
+
+
+# CT-04: link do autor em URL absoluta (RN-09, main.py:32)
+IF Contains(conteudo_csv, $''',\"/author/''', False) THEN
+    SET total_fail TO total_fail + 1
+    File.WriteText File: cfg_caminho_log TextToWrite: $'''CT-04 FAIL há author_url relativo (/author/...)''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.UTF8
+ELSE
+    IF Contains(conteudo_csv, cfg_prefixo_url_autor, False) THEN
+        SET total_pass TO total_pass + 1
+        File.WriteText File: cfg_caminho_log TextToWrite: $'''CT-04 PASS author_url absoluto (%cfg_prefixo_url_autor%...)''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.UTF8
+    ELSE
+        SET total_fail TO total_fail + 1
+        File.WriteText File: cfg_caminho_log TextToWrite: $'''CT-04 FAIL nenhum author_url começa com %cfg_prefixo_url_autor%''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.UTF8
+    END
+END
+
+
+# Total
+DateTime.GetCurrentDateTime.Local DateTimeFormat: DateTime.DateTimeFormat.DateAndTime CurrentDateTime=> agora
+File.WriteText File: cfg_caminho_log TextToWrite: $'''%agora% | Total: %total_pass% PASS, %total_fail% FAIL''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.UTF8

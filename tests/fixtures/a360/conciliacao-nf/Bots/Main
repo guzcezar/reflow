@@ -1,0 +1,17 @@
+{
+  "nodes": [
+    {"uid": "1", "packageName": "Database", "commandName": "connect",
+     "attributes": [{"name": "connectionString", "value": {"type": "STRING", "string": "Driver={ODBC Driver 17 for SQL Server};Server=sql01;Database=Fiscal;Uid=rpa;Pwd=S3nh@Forte"}}]},
+    {"uid": "2", "packageName": "Excel_MS", "commandName": "openSpreadsheet",
+     "attributes": [{"name": "filePath", "value": {"type": "FILE", "string": "\\\\fs01\\fiscal\\pedidos.xlsx"}}]},
+    {"uid": "3", "packageName": "LoopCommand", "commandName": "loop.commands.start",
+     "attributes": [],
+     "children": [
+       {"uid": "4", "packageName": "RestWebServices", "commandName": "get",
+        "attributes": [{"name": "uri", "value": {"type": "STRING", "string": "https://api.receita.example/cnpj/$cnpj$"}}]},
+       {"uid": "5", "packageName": "TaskBot", "commandName": "run",
+        "attributes": [{"name": "taskbot", "value": {"type": "FILE", "string": "repository:///Automation Anywhere/Bots/ConsultaPortal"}}]}
+     ]}
+  ],
+  "packages": [{"name": "Database", "version": "3.1.0"}, {"name": "Excel_MS", "version": "4.2.1"}]
+}

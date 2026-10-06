@@ -1,0 +1,24 @@
+[project]
+name = "reflow"
+version = "0.1.0"
+description = "Extração determinística de código legado (A360, Python, .NET) para o pipeline reflow."
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.uv]
+package = false  # não é instalável: roda da raiz do repo com `python -m reflow`
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["tests/fixtures", "input"]  # código legado: não formatar
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

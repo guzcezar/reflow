@@ -1,0 +1,23 @@
+# Código legado de cliente: pode conter credenciais e dados sensíveis
+input/*
+!input/.gitkeep
+# Exemplo público versionado (github.com/galatadesalegn/web_scraper)
+!input/quote-scraper/
+
+# Configuração local (permissões e preferências da máquina)
+.claude/settings.local.json
+CLAUDE.local.md
+.env
+.env.*
+
+# Editor e sistema operacional
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/

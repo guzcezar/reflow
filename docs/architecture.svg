@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 610" width="1000" height="610" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .t { font-size: 13px; font-weight: 600; fill: #0f172a; }
+      .s { font-size: 11px; fill: #475569; }
+      .m { font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 12px; fill: #0f172a; }
+      .zone { font-size: 12px; font-weight: 600; letter-spacing: .3px; }
+      .box { fill: #ffffff; stroke: #94a3b8; stroke-width: 1.2; }
+      .art { fill: #fefce8; stroke: #ca8a04; stroke-width: 1.2; }
+      .edge { stroke: #475569; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+      .ref { stroke: #16a34a; stroke-width: 1.3; stroke-dasharray: 4 3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1000" height="610" rx="12" fill="#ffffff"/>
+  <text x="30" y="40" font-size="18" font-weight="700" fill="#0f172a">reflow · arquitetura</text>
+
+  <!-- Fase 1: extração determinística -->
+  <rect x="220" y="62" width="560" height="140" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-dasharray="6 4"/>
+  <text x="236" y="84" class="zone" fill="#1d4ed8">PYTHON · reflow/ · fase 1, determinística, sem LLM</text>
+
+  <rect x="30" y="105" width="160" height="80" rx="8" class="box"/>
+  <text x="110" y="132" text-anchor="middle" class="m">input/&lt;projeto&gt;/</text>
+  <text x="110" y="152" text-anchor="middle" class="s">A360 (pasta ou .zip)</text>
+  <text x="110" y="168" text-anchor="middle" class="s">Python · .NET (C#/VB)</text>
+
+  <rect x="240" y="105" width="110" height="80" rx="8" class="box"/>
+  <text x="295" y="132" text-anchor="middle" class="m">cli.py</text>
+  <text x="295" y="152" text-anchor="middle" class="s">extract</text>
+  <text x="295" y="168" text-anchor="middle" class="s">&lt;projeto&gt; | --all</text>
+
+  <rect x="375" y="105" width="200" height="80" rx="8" class="box"/>
+  <text x="475" y="130" text-anchor="middle" class="m">extractors/</text>
+  <text x="475" y="150" text-anchor="middle" class="s">Extractor: detect · extract</text>
+  <text x="475" y="169" text-anchor="middle" class="m" font-size="11">a360 · dotnet · python</text>
+
+  <rect x="600" y="105" width="160" height="80" rx="8" class="box"/>
+  <text x="680" y="126" text-anchor="middle" class="m">inventory.py</text>
+  <text x="680" y="142" text-anchor="middle" class="m" font-size="11">+ patterns.py</text>
+  <text x="680" y="160" text-anchor="middle" class="s">fatos arquivo:linha</text>
+  <text x="680" y="175" text-anchor="middle" class="s">secrets mascarados</text>
+
+  <rect x="810" y="105" width="160" height="80" rx="8" class="art"/>
+  <text x="890" y="140" text-anchor="middle" class="m">01-inventory/</text>
+  <text x="890" y="160" text-anchor="middle" class="s">artefato da fase 1</text>
+
+  <path d="M190,145 H238" class="edge"/>
+  <path d="M350,145 H373" class="edge"/>
+  <path d="M575,145 H598" class="edge"/>
+  <path d="M760,145 H808" class="edge"/>
+
+  <!-- Fases 2–5: interpretação no Claude Code -->
+  <rect x="20" y="240" width="960" height="215" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-dasharray="6 4"/>
+  <text x="964" y="261" text-anchor="end" class="zone" fill="#c2410c">CLAUDE CODE · .claude/ · interpretação, um agent isolado por fase</text>
+
+  <rect x="160" y="270" width="800" height="30" rx="6" fill="#ffedd5" stroke="#ea580c"/>
+  <text x="560" y="290" text-anchor="middle" class="s" fill="#7c2d12"><tspan class="m" font-weight="600">/reflow</tspan>  orquestra as fases e retoma de onde parou</text>
+
+  <!-- inventário alimenta a documentação -->
+  <path d="M890,185 V222 H130 V316" class="edge"/>
+
+  <!-- cards de fase: header, skill, agent, artefato -->
+  <g>
+    <rect x="40" y="318" width="180" height="120" rx="8" class="box"/>
+    <path d="M40,326 a8,8 0 0 1 8,-8 h164 a8,8 0 0 1 8,8 v18 h-180 z" fill="#fed7aa"/>
+    <text x="130" y="336" text-anchor="middle" class="t">2 · document</text>
+    <text x="130" y="362" text-anchor="middle" class="m">/reflow-document</text>
+    <text x="130" y="379" text-anchor="middle" class="s">agent reflow-documenter</text>
+    <rect x="52" y="390" width="156" height="38" rx="5" class="art"/>
+    <text x="130" y="414" text-anchor="middle" class="m">02-docs/</text>
+  </g>
+  <g>
+    <rect x="245" y="318" width="180" height="120" rx="8" class="box"/>
+    <path d="M245,326 a8,8 0 0 1 8,-8 h164 a8,8 0 0 1 8,8 v18 h-180 z" fill="#fed7aa"/>
+    <text x="335" y="336" text-anchor="middle" class="t">3 · classify</text>
+    <text x="335" y="362" text-anchor="middle" class="m">/reflow-classify</text>
+    <text x="335" y="379" text-anchor="middle" class="s">agent reflow-classifier</text>
+    <rect x="257" y="390" width="156" height="38" rx="5" class="art"/>
+    <text x="335" y="406" text-anchor="middle" class="m" font-size="11">03-classification/</text>
+    <text x="335" y="421" text-anchor="middle" class="s" font-size="10">PAD · PARTIAL · NOT_PAD</text>
+  </g>
+  <g>
+    <path d="M500,333 L545,378 L500,423 L455,378 z" fill="#fef2f2" stroke="#dc2626" stroke-width="1.3"/>
+    <text x="500" y="375" text-anchor="middle" class="s" font-weight="600" fill="#991b1b">checkpoint</text>
+    <text x="500" y="389" text-anchor="middle" class="s" font-weight="600" fill="#991b1b">humano</text>
+    <text x="500" y="447" text-anchor="middle" class="s" font-size="10" fill="#991b1b">NOT_PAD: para aqui</text>
+  </g>
+  <g>
+    <rect x="575" y="318" width="180" height="120" rx="8" class="box"/>
+    <path d="M575,326 a8,8 0 0 1 8,-8 h164 a8,8 0 0 1 8,8 v18 h-180 z" fill="#fed7aa"/>
+    <text x="665" y="336" text-anchor="middle" class="t">4 · convert</text>
+    <text x="665" y="362" text-anchor="middle" class="m">/reflow-convert</text>
+    <text x="665" y="379" text-anchor="middle" class="s">agent reflow-pad-converter</text>
+    <rect x="587" y="390" width="156" height="38" rx="5" class="art"/>
+    <text x="665" y="406" text-anchor="middle" class="m" font-size="11">04-pad/&lt;flow&gt;/</text>
+    <text x="665" y="421" text-anchor="middle" class="s" font-size="10">+ boundary.md se PARTIAL</text>
+  </g>
+  <g>
+    <rect x="780" y="318" width="180" height="120" rx="8" class="box"/>
+    <path d="M780,326 a8,8 0 0 1 8,-8 h164 a8,8 0 0 1 8,8 v18 h-180 z" fill="#fed7aa"/>
+    <text x="870" y="336" text-anchor="middle" class="t">5 · test</text>
+    <text x="870" y="362" text-anchor="middle" class="m">/reflow-test</text>
+    <text x="870" y="379" text-anchor="middle" class="s">agent reflow-pad-tester</text>
+    <rect x="792" y="390" width="156" height="38" rx="5" class="art"/>
+    <text x="870" y="414" text-anchor="middle" class="m" font-size="11">05-test/test_&lt;flow&gt;/</text>
+  </g>
+
+  <path d="M220,378 H243" class="edge"/>
+  <path d="M425,378 H453" class="edge"/>
+  <path d="M545,378 H573" class="edge"/>
+  <path d="M755,378 H778" class="edge"/>
+
+  <!-- Referências editáveis -->
+  <rect x="20" y="478" width="960" height="92" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-dasharray="6 4"/>
+  <text x="500" y="498" text-anchor="middle" class="zone" fill="#15803d">REFERENCE/ · editável</text>
+
+  <rect x="40" y="510" width="180" height="46" rx="6" class="box"/>
+  <text x="130" y="530" text-anchor="middle" class="m" font-size="11">templates/docs/</text>
+  <text x="130" y="546" text-anchor="middle" class="s" font-size="10">estrutura da documentação</text>
+
+  <rect x="245" y="510" width="180" height="46" rx="6" class="box"/>
+  <text x="335" y="530" text-anchor="middle" class="m" font-size="11">classification-rubric.md</text>
+  <text x="335" y="546" text-anchor="middle" class="s" font-size="10">critérios de classificação</text>
+
+  <rect x="575" y="510" width="180" height="46" rx="6" class="box"/>
+  <text x="665" y="530" text-anchor="middle" class="m" font-size="11">robin-conventions.md</text>
+  <text x="665" y="546" text-anchor="middle" class="s" font-size="10">estrutura e regras dos flows</text>
+
+  <rect x="780" y="510" width="180" height="46" rx="6" class="box"/>
+  <text x="870" y="530" text-anchor="middle" class="m" font-size="11">robin-actions.md</text>
+  <text x="870" y="546" text-anchor="middle" class="s" font-size="10">whitelist de ações Robin</text>
+
+  <path d="M130,508 V440" class="ref"/>
+  <path d="M335,508 V440" class="ref"/>
+  <path d="M665,508 V440" class="ref"/>
+  <path d="M870,508 V440" class="ref"/>
+
+  <text x="500" y="595" text-anchor="middle" class="s">Artefatos em <tspan class="m" font-size="11">output/&lt;projeto&gt;/</tspan> (versionado). Cada skill de fase sobrescreve a própria fase. Nenhum valor de secret sai da fase 1.</text>
+</svg>

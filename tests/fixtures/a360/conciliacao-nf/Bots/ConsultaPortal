@@ -1,0 +1,13 @@
+{
+  "nodes": [
+    {"uid": "1", "packageName": "Browser", "commandName": "open",
+     "attributes": [{"name": "url", "value": {"type": "STRING", "string": "https://nfse.prefeitura.example/consulta"}}]},
+    {"uid": "2", "packageName": "Recorder", "commandName": "capture",
+     "attributes": [
+       {"name": "object", "value": {"type": "STRING", "string": "input#usuario"}},
+       {"name": "password", "value": {"type": "CREDENTIAL", "credential": {"name": "PortalPrefeitura", "attribute": "senha"}}}
+     ]},
+    {"uid": "3", "packageName": "Recorder", "commandName": "capture",
+     "attributes": [{"name": "object", "value": {"type": "STRING", "string": "button#consultar"}}]}
+  ]
+}

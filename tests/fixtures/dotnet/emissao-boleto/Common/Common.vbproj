@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.SAPFEWSELib, Version=1.0.0.0, Culture=neutral" />
+  </ItemGroup>
+</Project>

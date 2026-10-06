@@ -1,0 +1,55 @@
+# Coleta as citações de quotes.toscrape.com (até 10 páginas) e grava em quotes.csv.
+# Legado: input/quote-scraper/main.py
+
+SET cfg_url_inicial TO $'''https://quotes.toscrape.com/'''
+SET cfg_url_site TO $'''https://quotes.toscrape.com'''
+SET cfg_max_paginas TO 10
+SET cfg_timeout_pagina_segundos TO 10
+SET cfg_timeout_navegador_segundos TO 60
+SET cfg_caminho_saida TO $'''C:\\Users\\Public\\Documents\\quotes.csv'''
+SET out_status TO $'''ERRO'''
+SET out_error_message TO $''''''
+SET out_total_citacoes TO 0
+SET out_caminho_csv TO cfg_caminho_saida
+
+
+# UC-02: Percorrer as páginas pela URL /page/N/, no máximo cfg_max_paginas (main.py:17-41)
+WebAutomation.LaunchEdge.LaunchEdge Url: cfg_url_inicial WindowState: WebAutomation.BrowserWindowState.Maximized ClearCache: False ClearCookies: False WaitForPageToLoadTimeout: cfg_timeout_navegador_segundos Timeout: cfg_timeout_navegador_segundos BrowserInstance=> browser
+LOOP numero_pagina FROM 1 TO cfg_max_paginas STEP 1
+    SET url_pagina TO $'''%cfg_url_site%/page/%numero_pagina%/'''
+    WebAutomation.GoToWebPage.GoToWebPage BrowserInstance: browser Url: url_pagina WaitForPageToLoadTimeout: cfg_timeout_pagina_segundos
+
+
+    # UC-01: Extrair citações de uma página (main.py:21-34)
+    # Colunas: 0 text (regex tira as aspas tipográficas, main.py:29), 1 author, 2 tags (meta.keywords, separadas por vírgula, main.py:31), 3 author_url
+    WebAutomation.ExtractData.ExtractTable BrowserInstance: browser Control: $'''html > body > div.container > div.row > div.col-md-8 > div.quote''' ExtractionParameters: {[$'''span.text''', $'''Own Text''', $'''[^“”]+''', $'''text'''], [$'''small.author''', $'''Own Text''', $'''''', $'''author'''], [$'''div.tags > meta.keywords''', $'''content''', $'''''', $'''tags'''], [$'''span > a''', $'''Href''', $'''''', $'''author_url'''] } PostProcessData: False TimeoutInSeconds: cfg_timeout_pagina_segundos ExtractedData=> tabela_citacoes
+    SET out_total_citacoes TO out_total_citacoes + tabela_citacoes.RowsCount
+
+
+    # UC-03: Exportar para CSV, cabeçalho na primeira página e uma linha por citação (main.py:44-48)
+    IF numero_pagina = 1 THEN
+        File.WriteText File: cfg_caminho_saida TextToWrite: $'''text,author,tags,author_url''' AppendNewLine: True IfFileExists: File.IfFileExists.Overwrite Encoding: File.FileEncoding.UTF8
+    END
+    LOOP FOREACH citacao IN tabela_citacoes
+        SET url_autor TO citacao[3]
+        IF StartsWith(url_autor, $'''/''', False) THEN
+            SET url_autor TO $'''%cfg_url_site%%url_autor%'''
+        END
+        # TODO reflow: ação não mapeada — trocar ',' por '|' nas tags (main.py:31) e dobrar as aspas '"' internas do texto para o CSV (main.py:48)
+        File.WriteText File: cfg_caminho_saida TextToWrite: $'''\"%citacao[0]%\",\"%citacao[1]%\",\"%citacao[2]%\",\"%url_autor%\"''' AppendNewLine: True IfFileExists: File.IfFileExists.Append Encoding: File.FileEncoding.UTF8
+    END
+    IF numero_pagina < cfg_max_paginas THEN
+        # Pausa educada entre páginas, como no legado (main.py:14, main.py:40)
+        WAIT 0.5
+    END
+END
+WebAutomation.CloseWebBrowser BrowserInstance: browser
+
+
+# UC-03: Exportar para CSV, conferir o total gravado (main.py:52-56)
+IF out_total_citacoes = 0 THEN
+    SET out_status TO $'''ERRO'''
+    SET out_error_message TO $'''Nenhuma citação encontrada.'''
+ELSE
+    SET out_status TO $'''OK'''
+END

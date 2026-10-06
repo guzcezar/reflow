@@ -1,0 +1,118 @@
+{
+  "source_type": "python",
+  "project_name": "quote-scraper",
+  "files": [
+    {
+      "path": "README.md",
+      "kind": "other",
+      "lines": 24
+    },
+    {
+      "path": "main.py",
+      "kind": "script",
+      "lines": 61
+    },
+    {
+      "path": "quotes.csv",
+      "kind": "data",
+      "lines": 102
+    },
+    {
+      "path": "requirements.txt",
+      "kind": "data",
+      "lines": 3
+    }
+  ],
+  "entrypoints": [
+    "main.py"
+  ],
+  "call_graph": [],
+  "ui_interactions": [
+    {
+      "file": "main.py",
+      "line": 24,
+      "tech": "bs4",
+      "action": "BeautifulSoup",
+      "target": "response.text, 'html.parser'"
+    },
+    {
+      "file": "main.py",
+      "line": 26,
+      "tech": "bs4",
+      "action": "soup.select",
+      "target": "'div.quote'"
+    },
+    {
+      "file": "main.py",
+      "line": 29,
+      "tech": "bs4",
+      "action": "get_text.strip",
+      "target": "'“”'"
+    },
+    {
+      "file": "main.py",
+      "line": 29,
+      "tech": "bs4",
+      "action": "select_one.get_text",
+      "target": "strip=True"
+    },
+    {
+      "file": "main.py",
+      "line": 29,
+      "tech": "bs4",
+      "action": "div.select_one",
+      "target": "'span.text'"
+    },
+    {
+      "file": "main.py",
+      "line": 30,
+      "tech": "bs4",
+      "action": "select_one.get_text",
+      "target": "strip=True"
+    },
+    {
+      "file": "main.py",
+      "line": 30,
+      "tech": "bs4",
+      "action": "div.select_one",
+      "target": "'small.author'"
+    },
+    {
+      "file": "main.py",
+      "line": 31,
+      "tech": "bs4",
+      "action": "div.select",
+      "target": "'a.tag'"
+    },
+    {
+      "file": "main.py",
+      "line": 32,
+      "tech": "bs4",
+      "action": "div.select_one",
+      "target": "\"a[href^='/author']\""
+    },
+    {
+      "file": "main.py",
+      "line": 36,
+      "tech": "bs4",
+      "action": "soup.select_one",
+      "target": "'li.next a'"
+    }
+  ],
+  "http_calls": [
+    {
+      "file": "main.py",
+      "line": 22,
+      "method": "GET",
+      "url": "url",
+      "lib": "requests"
+    }
+  ],
+  "data_sources": [],
+  "dependencies": [
+    "beautifulsoup4>=4.12.0",
+    "bs4",
+    "requests>=2.31.0"
+  ],
+  "credentials": []
+}
